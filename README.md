@@ -95,11 +95,7 @@ cd Frontend && pip install -r requirements.txt && streamlit run app.py
 ## 👨‍💻 Author
 **Chamika Uluwatta**  
 BEng in Software Engineering, University of Westminster  
-📅 April 2023  
 
 Supervised by **Dr. Ruvan Weerasinghe**  
 
----
-
-## 📚 References
-For detailed methodology, evaluation, and academic references, please refer to the full [Thesis Document](./Thesis.pdf).  
+--- 
