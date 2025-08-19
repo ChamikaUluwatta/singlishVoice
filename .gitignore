@@ -1,0 +1,14 @@
+# Ignore backend virtual environment
+Backend/venv/
+Backend/venv/.env
+
+# Ignore frontend virtual environment
+Frontend/venv/
+Frontend/venv/.env
+
+# Other common Python ignores (add if not present)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env

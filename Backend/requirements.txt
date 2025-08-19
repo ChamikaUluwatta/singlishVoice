@@ -1,0 +1,11 @@
+fastapi[all]
+python-dotenv
+torch
+transformers
+coqui-tts
+huggingface_hub
+requests
+python-multipart
+aiofiles
+uvicorn
+regex
