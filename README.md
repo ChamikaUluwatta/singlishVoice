@@ -27,7 +27,7 @@ SinglishVoice bridges this gap by introducing an **end-to-end TTS pipeline**:
 
 ---
 
-## 📊 Evaluation Results
+## Evaluation Results
 - **NLLB Model (Transliteration)**  
   - Word Error Rate (WER): **21%**  
   - Character Error Rate (CER): **6%**  
@@ -41,7 +41,7 @@ SinglishVoice bridges this gap by introducing an **end-to-end TTS pipeline**:
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 1. **Input**: Romanized Sinhala text (Singlish).  
 2. **Back-Transliteration Module** (NLLB).  
 3. **Speech Synthesis Module** (VITS).  
@@ -49,7 +49,7 @@ SinglishVoice bridges this gap by introducing an **end-to-end TTS pipeline**:
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 - **Languages**: Python  
 - **Frameworks & Libraries**:  
   - PyTorch  
@@ -62,7 +62,7 @@ SinglishVoice bridges this gap by introducing an **end-to-end TTS pipeline**:
 
 ---
 
-## 🚀 Installation & Usage
+## Installation & Usage
 ```bash
 # Clone repository
 git clone https://github.com/your-username/singlishvoice.git
@@ -77,7 +77,7 @@ cd Frontend && pip install -r requirements.txt && streamlit run app.py
 
 ---
 
-## 📌 Use Cases
+## Use Cases
 - Accessibility support for **visually impaired users**.  
 - **Social media content consumption** in Romanized Sinhala.  
 - **Language learning & research** in Sinhala NLP.  
@@ -85,14 +85,14 @@ cd Frontend && pip install -r requirements.txt && streamlit run app.py
 
 ---
 
-## 🔮 Future Work
+## Future Work
 - Improve **female voice naturalness**.  
 - Enhance handling of **complex code-mixed sentences**.  
 - Optimize system for **real-time mobile applications**.  
 
 ---
 
-## 👨‍💻 Author
+## Author
 **Chamika Uluwatta**  
 BEng in Software Engineering, University of Westminster  
 
