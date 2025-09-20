@@ -1,7 +1,7 @@
 # SinglishVoice: Code-mixed Romanized Sinhala Text-to-Speech System
 ![Prototype 1](./Prototype2.png)
 ![Prototype 2](./Prototype.png)
-## 📌 Overview
+## Overview
 **SinglishVoice** is a research project and implementation of a Text-to-Speech (TTS) system designed to handle **code-mixed Romanized Sinhala (Singlish)**.  
 Unlike traditional Sinhala TTS systems that require native Sinhala script, SinglishVoice processes Romanized input text — including informal spelling, shorthand, and code-mixed English — and produces natural Sinhala speech.
 
@@ -9,7 +9,6 @@ This project was developed as part of the **BEng in Software Engineering** disse
 
 ---
 
-## 🎯 Motivation
 Sinhala speakers frequently use **Romanized Sinhala** on social media and digital platforms.  
 However, existing TTS systems **do not support Romanized Sinhala input**, creating accessibility challenges for users.  
 
@@ -19,7 +18,7 @@ SinglishVoice bridges this gap by introducing an **end-to-end TTS pipeline**:
 
 ---
 
-## ✨ Key Features
+## Features
 - Support for **code-mixed Romanized Sinhala (Singlish)**.  
 - **Back-transliteration** using **fine-tuned NLLB**.  
 - **High-quality speech synthesis** with **VITS** (Vocoder-free TTS).  
