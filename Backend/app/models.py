@@ -7,19 +7,19 @@ from huggingface_hub import snapshot_download
 from .utils import normalize_numbers
 
 class TransliterationModel:
-    def __init__(self, model_repo: str, auth_token: str):
+    def __init__(self, model_repo: str, token: str):
         self.model_repo = model_repo
-        self.auth_token = auth_token
+        self.token = token
         self.tokenizer = None
         self.model = None
         self._load_model()
 
     def _load_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
-            self.model_repo, token=self.auth_token
+            self.model_repo, token=self.token
         )
         self.model = AutoModelForSeq2SeqLM.from_pretrained(
-            self.model_repo, token=self.auth_token
+            self.model_repo, token=self.token
         )
         if torch.cuda.is_available():
             self.model.to("cuda")
@@ -59,7 +59,8 @@ class TextToSpeechModel:
         )
 
     def synthesize(self, text: str, speaker: str) -> tuple[str, str]:
-        audio_save_directory = "/content/FYP/GeneratedWaves"
+        audio_save_directory = os.getenv("AUDIO_OUTPUT_DIR", "/content/FYP/GeneratedWaves")
+        os.makedirs(audio_save_directory, exist_ok=True)
         
         # Generate unique filename
         timestamp = int(time.time())
