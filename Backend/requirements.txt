@@ -1,6 +1,7 @@
 fastapi[all]
 python-dotenv
 torch
+torchaudio
 transformers
 coqui-tts
 huggingface_hub
