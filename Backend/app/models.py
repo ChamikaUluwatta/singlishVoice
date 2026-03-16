@@ -1,4 +1,5 @@
 import os
+import json
 import torch
 import time
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
@@ -42,18 +43,42 @@ class TextToSpeechModel:
         self._load_model()
 
     def _load_model(self):
+        local_vits_dir = os.getenv("VITS_LOCAL_DIR", "/data/models/sinhala_vits")
+        os.makedirs(local_vits_dir, exist_ok=True)
+
         vits_dir = snapshot_download(
             repo_id=self.model_repo,
             revision="main",
             token=self.token,
+            local_dir=local_vits_dir,
             local_dir_use_symlinks=False
         )
         model_path = os.path.join(vits_dir, "best_model_31841.pth")
         config_path = os.path.join(vits_dir, "config.json")
+
+        runtime_config_path = config_path
+        with open(config_path, "r", encoding="utf-8") as f:
+            config_data = json.load(f)
+
+        speakers_candidates = [
+            os.path.join(vits_dir, "speaker.pth"),
+            os.path.join(vits_dir, "speakers.pth"),
+            os.path.join(vits_dir, "speaker", "speaker.pth"),
+            os.path.join(vits_dir, "speaker", "speakers.pth"),
+        ]
+        resolved_speakers = next((p for p in speakers_candidates if os.path.exists(p)), None)
+        if resolved_speakers:
+            config_data["speakers_file"] = resolved_speakers
+            model_args = config_data.get("model_args")
+            if isinstance(model_args, dict):
+                model_args["speakers_file"] = resolved_speakers
+            runtime_config_path = os.path.join(vits_dir, "config.runtime.json")
+            with open(runtime_config_path, "w", encoding="utf-8") as f:
+                json.dump(config_data, f, ensure_ascii=True, indent=2)
         
         self.tts = CoquiTTS(
             model_path=model_path,
-            config_path=config_path,
+            config_path=runtime_config_path,
             progress_bar=False,
             gpu=torch.cuda.is_available()
         )

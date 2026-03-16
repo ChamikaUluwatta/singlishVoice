@@ -4,6 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     HF_HOME=/data/.huggingface \
+    VITS_LOCAL_DIR=/data/models/sinhala_vits \
     AUDIO_OUTPUT_DIR=/content/FYP/GeneratedWaves \
     PORT=7860
 
@@ -20,7 +21,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /content/FYP/GeneratedWaves /app/speaker /data/.huggingface
+RUN mkdir -p /content/FYP/GeneratedWaves /app/speaker /data/.huggingface /data/models/sinhala_vits
 
 EXPOSE 7860
 
