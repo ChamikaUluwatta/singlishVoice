@@ -16,10 +16,10 @@ class TransliterationModel:
 
     def _load_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
-            self.model_repo, use_auth_token=self.auth_token
+            self.model_repo, token=self.auth_token
         )
         self.model = AutoModelForSeq2SeqLM.from_pretrained(
-            self.model_repo, use_auth_token=self.auth_token
+            self.model_repo, token=self.auth_token
         )
         if torch.cuda.is_available():
             self.model.to("cuda")
@@ -35,9 +35,9 @@ class TransliterationModel:
         return translated_text
 
 class TextToSpeechModel:
-    def __init__(self, model_repo: str, auth_token: str):
+    def __init__(self, model_repo: str, token: str):
         self.model_repo = model_repo
-        self.auth_token = auth_token
+        self.token = token
         self.tts = None
         self._load_model()
 
@@ -45,7 +45,7 @@ class TextToSpeechModel:
         vits_dir = snapshot_download(
             repo_id=self.model_repo,
             revision="main",
-            use_auth_token=self.auth_token,
+            token=self.token,
             local_dir_use_symlinks=False
         )
         model_path = os.path.join(vits_dir, "best_model_31841.pth")

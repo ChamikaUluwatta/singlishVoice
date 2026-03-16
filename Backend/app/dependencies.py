@@ -6,14 +6,14 @@ from .config import settings
 def get_transliteration_model() -> TransliterationModel:
     return TransliterationModel(
         model_repo=settings.NLLB_REPO,
-        auth_token=settings.HF_TOKEN
+        token=settings.HF_TOKEN
     )
 
 @lru_cache()
 def get_tts_model() -> TextToSpeechModel:
     return TextToSpeechModel(
         model_repo=settings.VITS_REPO,
-        auth_token=settings.HF_TOKEN
+        token=settings.HF_TOKEN
     )
 
 def preload_models():
