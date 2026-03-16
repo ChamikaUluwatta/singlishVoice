@@ -2,8 +2,8 @@ fastapi[all]
 python-dotenv
 torch
 torchaudio
-transformers
-coqui-tts
+transformers>=4.57,<5
+coqui-tts==0.27.5
 huggingface_hub
 requests
 python-multipart
