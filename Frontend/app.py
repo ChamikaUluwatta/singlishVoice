@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import os
+import time
 from dotenv import load_dotenv
 from urllib.parse import unquote_to_bytes
 
@@ -8,13 +9,58 @@ from urllib.parse import unquote_to_bytes
 load_dotenv()
 BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000/generate")
 
+
+def _normalize_backend_urls() -> tuple[str, str]:
+    raw = BACKEND_API_URL.strip()
+    if raw.endswith("/generate"):
+        base = raw.rsplit("/generate", 1)[0]
+    else:
+        base = raw.rstrip("/")
+    generate_url = base + "/generate"
+    health_url = base + "/health"
+    return generate_url, health_url
+
+
+GENERATE_API_URL, HEALTH_API_URL = _normalize_backend_urls()
+
+
+def is_backend_ready(timeout_seconds: int = 5) -> bool:
+    try:
+        response = requests.get(HEALTH_API_URL, timeout=timeout_seconds)
+        return response.ok
+    except requests.exceptions.RequestException:
+        return False
+
+
+def render_backend_startup_state() -> bool:
+    if is_backend_ready(timeout_seconds=3):
+        st.success("Backend is ready")
+        st.caption(f"Backend endpoint: https://huggingface.co/spaces/Chamika1/SinglishVoiceBackend")
+        return True
+
+    with st.spinner("Backend is starting. Please wait..."):
+        # Give backend a short warm-up window before showing guidance.
+        for _ in range(6):
+            if is_backend_ready(timeout_seconds=2):
+                st.success("Backend is ready")
+                st.caption(f"Backend endpoint: https://huggingface.co/spaces/Chamika1/SinglishVoiceBackend")
+                return True
+            time.sleep(1)
+
+    st.info(
+        "Backend is still starting. If this takes longer, check the Space logs "
+        "for model download and startup details."
+    )
+    st.caption(f"Backend endpoint: https://huggingface.co/spaces/Chamika1/SinglishVoiceBackend")
+    return False
+
 def call_tts_api(text, speaker):
     payload = {"text": text, "speaker": speaker}
     headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
     api_timeout_seconds = 90
 
     try:
-        response = requests.post(BACKEND_API_URL, json=payload, headers=headers, timeout=api_timeout_seconds, stream=True)
+        response = requests.post(GENERATE_API_URL, json=payload, headers=headers, timeout=api_timeout_seconds, stream=True)
         response.raise_for_status()
 
         content_type = response.headers.get('Content-Type', '')
@@ -65,6 +111,8 @@ def call_tts_api(text, speaker):
 def render_input_view():
     st.markdown("<h1 style='text-align: center;'>SinglishVoice</h1>", unsafe_allow_html=True)
 
+    backend_ready = render_backend_startup_state()
+
     text_input = st.text_input("Enter Romanized Text:", key="input_text_main", placeholder="e.g., oyata kohomada")
 
     # Model selection placeholders
@@ -81,7 +129,12 @@ def render_input_view():
     selected_speaker_value = speaker_mapping[selected_speaker_display] 
 
     # Generate button
-    generate_button = st.button("Generate speech", key="generate_button_main", type="primary")
+    generate_button = st.button(
+        "Generate speech",
+        key="generate_button_main",
+        type="primary",
+        disabled=not backend_ready,
+    )
 
     if generate_button:
         if not text_input:
