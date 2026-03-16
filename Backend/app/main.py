@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from .models import TransliterationModel, TextToSpeechModel
-from .dependencies import get_transliteration_model, get_tts_model, preload_models
+from .dependencies import get_transliteration_model, get_tts_model, preload_models, get_startup_status
 from .utils import is_sinhala
 
 app = FastAPI(
@@ -63,3 +63,8 @@ async def generate_speech_endpoint(
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "ok"}
+
+
+@app.get("/status", tags=["System"])
+async def startup_status():
+    return get_startup_status()
