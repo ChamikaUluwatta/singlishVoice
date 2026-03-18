@@ -53,7 +53,7 @@ svg text {
 
 
 .wrapper {
-  background-color: #ffffff;
+  background-color: transparent;
   width: 100%;
   max-width: 1100px;
   flex: 1;
@@ -69,6 +69,7 @@ svg text {
   place-items: stretch;
   text-align: center;
   padding: var(--space-md);
+  background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%);
 }
 
 .app-shell > div {
