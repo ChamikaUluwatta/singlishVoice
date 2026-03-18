@@ -1,7 +1,9 @@
 import os
+import io
 import json
 import torch
 import time
+import soundfile as sf
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from TTS.api import TTS as CoquiTTS
 from huggingface_hub import snapshot_download
@@ -83,15 +85,7 @@ class TextToSpeechModel:
             gpu=torch.cuda.is_available()
         )
 
-    def synthesize(self, text: str, speaker: str) -> tuple[str, str]:
-        audio_save_directory = os.getenv("AUDIO_OUTPUT_DIR", "/content/FYP/GeneratedWaves")
-        os.makedirs(audio_save_directory, exist_ok=True)
-        
-        # Generate unique filename
-        timestamp = int(time.time())
-        output_filename = f"audio_{timestamp}_{speaker}.wav"
-        output_path = os.path.join(audio_save_directory, output_filename)
-        
+    def synthesize(self, text: str, speaker: str) -> tuple[str, bytes]:
         # Determine speaker parameters
         use_speaker_name = hasattr(self.tts, 'speakers') and self.tts.speakers and speaker in self.tts.speakers
         speaker_arg = speaker if use_speaker_name else None
@@ -101,11 +95,13 @@ class TextToSpeechModel:
             speaker_arg = self.tts.speakers[0]
         
         # Generate audio
-        self.tts.tts_to_file(
+        wav = self.tts.tts(
             text=text,
             speaker=speaker_arg,
-            speaker_idx=speaker_idx_arg,
-            file_path=output_path
         )
 
-        return text, output_path
+        buffer = io.BytesIO()
+        sf.write(buffer, wav, samplerate=self.tts.synthesizer.output_sample_rate, format="WAV")
+        buffer.seek(0)
+
+        return text, buffer.read()
