@@ -1,4 +1,6 @@
 import type { SpeechResult } from '../api/tts'
+import '@material/web/button/filled-button.js'
+import '@material/web/button/outlined-button.js'
 
 interface Props extends SpeechResult {
   onReset: () => void
@@ -8,12 +10,12 @@ export default function ResultView({ audioUrl, transliteratedText, onReset }: Pr
   function handleDownload(): void {
     const a = document.createElement('a')
     a.href = audioUrl
-    a.download = `${transliteratedText}.wav`
+    a.download = `audio.wav`
     a.click()
   }
 
   return (
-    <div>
+    <div className="result-view">
       <h1>Generated Output</h1>
 
       <h3>Transliteration Result</h3>
@@ -22,8 +24,10 @@ export default function ResultView({ audioUrl, transliteratedText, onReset }: Pr
       <h3>Generated Audio</h3>
       <audio controls src={audioUrl} />
 
-      <button onClick={handleDownload}>Download Audio</button>
-      <button onClick={onReset}>Generate New</button>
+      <div className="result-actions">
+        <md-filled-button onClick={handleDownload}>Download Audio</md-filled-button>
+        <md-outlined-button onClick={onReset}>Generate New</md-outlined-button>
+      </div>
     </div>
   )
 }

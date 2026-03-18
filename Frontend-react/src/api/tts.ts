@@ -1,4 +1,12 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL
+const RAW_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
+function getBaseUrl(): string {
+  const baseUrl = RAW_BASE_URL?.trim()
+  if (!baseUrl) {
+    throw new Error('Missing VITE_BACKEND_URL. Set it in Frontend-react/.env and restart dev server.')
+  }
+  return baseUrl.replace(/\/+$/, '')
+}
 
 export interface SpeechResult {
   audioUrl: string
@@ -8,7 +16,7 @@ export interface SpeechResult {
 
 export async function healthCheck(): Promise<boolean> {
   try {
-    const response = await fetch(`${BASE_URL}/health`)
+    const response = await fetch(`${getBaseUrl()}/health`)
     return response.ok
   } catch (error) {
     return false
@@ -16,25 +24,24 @@ export async function healthCheck(): Promise<boolean> {
 }
 
 export async function generateSpeech(text: string, speaker: string): Promise<SpeechResult> {
-  const res = await fetch(`${BASE_URL}/generate`, {
+  const res = await fetch(`${getBaseUrl()}/generate`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'audio/wav' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, speaker }),
   })
+
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-  const disposition = res.headers.get('Content-Disposition') ?? ''
-  let transliteratedText = 'Transliteration result'
+  const data = await res.json()
 
-  if (disposition.includes('filename*=')) {
-    const encoded = disposition.split("''")[1]
-    transliteratedText = decodeURIComponent(encoded)
-  } else if (disposition.includes('filename=')) {
-    transliteratedText = disposition.split('filename=')[1].replace(/"/g, '')
-  }
-
-  const audioBlob = await res.blob()
+  const binaryString = atob(data.audio_base64)
+  const bytes = Uint8Array.from(binaryString, (c) => c.charCodeAt(0))
+  const audioBlob = new Blob([bytes], { type: 'audio/wav' })
   const audioUrl = URL.createObjectURL(audioBlob)
 
-  return { audioUrl, audioBlob, transliteratedText }
+  return {
+    audioUrl,
+    audioBlob,
+    transliteratedText: data.sinhala_text,
+  }
 }

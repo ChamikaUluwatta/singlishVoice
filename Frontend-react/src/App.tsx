@@ -6,11 +6,13 @@ import InputView from './components/InputView'
 
 function App() {
   const [results, setResults] = useState<SpeechResult | null>(null)
-  return results ? (
-    <ResultView {...results} onReset={() => setResults(null)} />
-  ) : (
-    <InputView onResults={setResults} />
-  )
+  return <main className='app-shell'>
+    {results ? (
+      <ResultView {...results} onReset={() => setResults(null)} />
+    ) : (
+      <InputView onResults={setResults} />
+    )}
+  </main>
 }
 
 export default App

@@ -1,0 +1,213 @@
+@import url("https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap");
+
+:root {
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 30px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+svg {
+  font-family: "Allerta Stencil", sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+svg text {
+  animation: stroke 4s ease-out 1 forwards;
+  stroke-width: 2;
+  stroke: #386fa0;
+  font-size: clamp(42px, 11vw, 100px);
+}
+
+@keyframes stroke {
+    0% {
+        fill: rgba(26,131,204,0);
+        stroke: rgba(56,111,160,1);
+        stroke-dashoffset: 25%;
+        stroke-dasharray: 0 50%;
+        stroke-width: 2;
+    }
+    70% {
+        fill: rgba(26,131,204,0);
+        stroke: rgba(56,111,160,1);
+    }
+    80% {
+        fill: rgba(26,131,204,0);
+        stroke: rgba(56,111,160,1);
+        stroke-width: 3;
+    }
+    100% {
+        fill: rgba(26,131,204,1);
+        stroke: rgba(56,111,160,0);
+        stroke-dashoffset: -25%;
+        stroke-dasharray: 50% 0;
+        stroke-width: 0;
+    }
+}
+
+
+.wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 1100px;
+  flex: 1;
+  min-height: clamp(160px, 30vh, 320px);
+  display: grid;
+  place-items: center;
+  padding: var(--space-sm);
+}
+
+.app-shell {
+  min-height: 100dvh;
+  display: grid;
+  place-items: stretch;
+  text-align: center;
+  padding: var(--space-md);
+}
+
+.app-shell > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  gap: var(--space-xl);
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.input-view {
+  width: 100%;
+}
+
+.result-view {
+  width: min(900px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.result-actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.backend-panel {
+  width: min(850px, 100%);
+  border: 1px solid #d3e3f3;
+  border-radius: 12px;
+  padding: var(--space-sm);
+  background: #ffffff;
+}
+
+.backend-status-row {
+  margin: 0 0 var(--space-sm) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-weight: 600;
+}
+
+.start-backend-btn {
+  width: auto;
+}
+
+.status-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.status-ready {
+  color: #0e5f2a;
+  background: #dff8e8;
+}
+
+.status-not-ready {
+  color: #8b1f1f;
+  background: #ffe3e3;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--space-lg);
+  width: min(900px, 100%);
+}
+
+.input-group > * {
+  flex: 1 1 280px;
+  min-width: 220px;
+}
+
+.generate-btn {
+  width: min(320px, 100%);
+}
+
+audio {
+  width: min(560px, 100%);
+}
+
+@media (max-width: 900px) {
+  .app-shell > div {
+    gap: var(--space-lg);
+  }
+
+  .input-group {
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: var(--space-sm);
+  }
+
+  .app-shell > div {
+    gap: var(--space-md);
+  }
+
+  .wrapper {
+    min-height: clamp(130px, 26vh, 220px);
+  }
+
+  .input-group {
+    flex-direction: column;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+
+  .input-group > * {
+    min-width: 0;
+  }
+
+  .generate-btn {
+    width: 100%;
+  }
+
+  .backend-status-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .result-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .result-actions > * {
+    width: 100%;
+  }
+
+}

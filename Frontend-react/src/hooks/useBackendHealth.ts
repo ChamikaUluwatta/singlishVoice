@@ -1,32 +1,33 @@
 import { useEffect, useState } from 'react'
 import { healthCheck } from '../api/tts'
 
-export type BackendStatus = 'checking' | 'ready' | 'slow'
+export type BackendStatus = 'ready' | 'starting'
 
 export function useBackendHealth(): BackendStatus {
-  const [status, setStatus] = useState<BackendStatus>('checking')
+  const [status, setStatus] = useState<BackendStatus>('starting')
+  
   useEffect(() => {
-    let attempt = 0
-    let canceled = false
+    let isMounted = true
 
-    async function poll(): Promise<void> {
-      if (canceled) return
-      const ready = await healthCheck()
-      if (ready) {
-        setStatus('ready')
-      }
-
-      attempt++
-      if (attempt >= 6) {
-        setStatus('slow')
-      } else {
-        setTimeout(poll, 1000)
+    async function checkHealth() {
+      try {
+        const isHealthy = await healthCheck()
+        if (isMounted) {
+          setStatus(isHealthy ? 'ready' : 'starting')
+        }
+      } catch (error) {
+        if (isMounted) {
+          setStatus('starting')
+        }
       }
     }
-    poll()
+
+    checkHealth()
+    const intervalId = setInterval(checkHealth, 30000)
 
     return () => {
-      canceled = true
+      isMounted = false
+      clearInterval(intervalId)
     }
   }, [])
 
